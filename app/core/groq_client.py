@@ -22,7 +22,7 @@ def create_medical_qa_chain(vector_db):
     llm = initialize_llm()
 
     prompt_template = """
-    You are a knowledgeable medical assistant providing information based on authoritative medical sources like the Merck Manual.
+    You are a knowledgeable medical assistant providing information based on authoritative medical sources.
     Use the following pieces of context to answer the question at the end.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     Always maintain a professional and accurate tone. Be concise but thorough.

@@ -56,6 +56,7 @@ async def chat_interface(message, history):
     history.append({"role": "assistant", "content": typing_base.format(dots=".")})
     yield "", history
 
+    # Simulate thinking animation
     for dots in ["..", "...", ""]:
         await asyncio.sleep(0.4)
         history[-1]["content"] = typing_base.format(dots=dots)
@@ -82,11 +83,11 @@ async def chat_interface(message, history):
 with gr.Blocks(css="""
 #logo-container {
     justify-content: center;
-    padding-top: 10px;
+    padding-top: 5px;
     margin-bottom: -30px;
 }
 #logo-img > div {
-    background: linear-gradient(to bottom right, #e3f2fd, #ebeef9);
+    background: linear-gradient(to bottom right, #2c2f36, #1f2125);
     box-shadow: none;
     padding: 0;
 }
@@ -94,11 +95,12 @@ with gr.Blocks(css="""
     font-size: 2.5rem;
     font-weight: bold;
     text-align: center;
-    color: #2b4f81;
-    margin-bottom: 20px;
+    color: #f0f0f0;
+    margin-bottom: 0px;
 }
 .gradio-container {
-    background: linear-gradient(to bottom right, #e3f2fd, #f3e5f5);
+    background: linear-gradient(to bottom right, #1e1e1e, #2c2c2c);
+    color: #f0f0f0;
 }
 
 #upload-btn {
@@ -106,22 +108,30 @@ with gr.Blocks(css="""
     width: 40px !important;
     min-width: 40px !important;
     border-radius: 50%;
-    background-color: #f1eaff;
+    background-color: #3a3b45;
     text-align: center;
     padding: 0 !important;
     font-size: 18px !important;
-    color: #7e57c2 !important;
+    color: #a78bfa !important;
     border: none;
     margin-left: 4px;
 }
 #upload-btn:hover {
-    background-color: #e2d5fa !important;
+    background-color: #4c4d5a !important;
 }
 
 #hidden-file .wrap, #hidden-file .upload-box {
     display: none !important;
 }
-""", theme=gr.themes.Soft(primary_hue="violet", secondary_hue="blue")) as demo:
+
+#subtitle {
+    color: #f0f0f0;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: -15px;
+    margin-bottom: -15px;
+}
+""", theme=gr.themes.Base()) as demo:
 
     with gr.Column():
         with gr.Row(elem_id="logo-container"):
@@ -129,23 +139,23 @@ with gr.Blocks(css="""
                 value="data/logo.png",
                 show_label=False,
                 show_download_button=False,
-                width=150,
-                height=150,
+                width=90,
+                height=90,
                 elem_id="logo-img"
             )
 
         gr.HTML("<div id='title'>AI-DOC Medical Assistant 🩺</div>")
-        gr.Markdown("Upload PDFs and ask questions right inside the chat!")
+        gr.Markdown("AI personal assistant for medical insights!", elem_id="subtitle")
 
         chatbot = gr.Chatbot(
             value=[
                 {"role": "assistant", "content":
                     f"<img src='{logo_base64}' style='width:28px; border-radius:50%; vertical-align: middle; margin-right: 8px;'>"
-                    "Hi👋, I’m <strong>AI-DOC</strong> – your personal health assistant. Upload a PDF and ask me anything!"
+                    "Hi👋, I’m <strong>AI-DOC</strong> – your personal health assistant. Ask me anything!"
                 }
             ],
             type="messages",
-            height=500,
+            height=380,
             show_copy_button=True,
         )
 
@@ -157,7 +167,7 @@ with gr.Blocks(css="""
                 hidden_file = gr.File(file_types=[".pdf"], file_count="multiple", visible=True, elem_id="hidden-file")
 
         msg.submit(chat_interface, [msg, chatbot], [msg, chatbot])
-        hidden_file.change(upload_pdfs_inline, [hidden_file], [msg, chatbot])
+        hidden_file.change(lambda f: upload_pdfs_inline(f) + [chatbot.value], [hidden_file], [msg, chatbot])
         upload_trigger.click(None, None, None, js="() => document.querySelector('#hidden-file input').click()")
 
 if __name__ == "__main__":

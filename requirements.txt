@@ -1,0 +1,18 @@
+# Core LangChain + Extensions
+langchain
+langchain-community
+langchain-chroma
+langchain-groq
+langchain-huggingface
+
+# Embeddings + PDF
+sentence-transformers
+PyMuPDF  # pymupdf also works but PyMuPDF is canonical
+pypdf
+
+# UI
+gradio
+
+# Utilities
+python-dotenv
+tqdm

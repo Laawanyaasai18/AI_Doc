@@ -1,0 +1,12 @@
+# .gitignore
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+data/
+vectorstore/
+models/
+.vscode/
+.DS_Store
